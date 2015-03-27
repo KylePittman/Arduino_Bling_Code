@@ -1,10 +1,37 @@
 #include "LPD8806.h"
 #include "SPI.h"
 
-// Simple test for 160 (5 meters) of LPD8806-based RGB LED strip
-// Not compatible with Trinket/Gemma due to limited RAM
-
-/*****************************************************************************/
+/*
+*    LPD806 Library Methods:
+*    (this code has the LPD8806 object named strip use strip.method() to call any of these methods)
+*    
+*      numPixels() - returns the number of LEDs in strip
+*      begin() - used in setup to initialize the strip
+*      show() - latches data in the internal shift registers to the LEDs (shows the uploaded pattern)
+*      Color(uint8_t red, uint8_t green, uint8_t blue) used to create a color using r-g-b values 0-127 
+*        each, if you are going to assign a color to a variable, the variable must be of type uint32_t
+*      setPixelColor(int pixel, uint32_t color) set 'pixel' 'color'
+*
+*    Example Code:
+*      Usage of methods to set all pixels blue and show them:
+*
+*        uint32_t color = strip.Color(0,0,100);
+*        for(int pixel = 0; pixel < strip.numPixels(); pixel++){
+*          strip.setPixelColor(pixel,color);
+*        }
+*        strip.show();
+*
+*
+*
+*    Common Colors:
+*      Red: strip.Color(127,0,0)
+*      Green: strip.Color(0,127,0)
+*      Blue: strip.Color(0,0,127)
+*      Orange: strip.Color(80,20,0)
+*      Yellow: strip.Color(100,20,0)
+*      White: strip.Color(127,127,127)
+*      Blank: strip.Color(0,0,0) or just 0 they are equivalent
+*/  
 
 // Number of RGB LEDs in strand:
 int nLEDs =64;
