@@ -63,7 +63,17 @@ void singleColor(uint32_t color){ //copied
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, color);
   strip.show();
 }
-
+/*
+*returnColor
+*  Parameters:
+*    c is a color to be decoded
+*  Information:
+*    This is for help debugging using the Serial
+*    Monitor
+*  
+*  DO NOT USE THIS WHEN IT'S ON THE ROBOT
+*  FOR DEBUGGING ONLY
+*/
 String returnColor(uint32_t c){
   if(c == strip.Color(100,0,0)) return "Red";
   else if(c == strip.Color(0,100,0)) return "Green";
@@ -75,6 +85,38 @@ String returnColor(uint32_t c){
 
 }
 
+/*
+* --NOT TESTED--
+*Speedometer
+*  Parameters:
+*    percent percent of max speed
+*/
+void speedometer(int percent){
+  int pixels;
+  if(percent < 0 || percent > 100) return;
+  else pixels = (int) (strip.numPixels() * (percent/100.0)) / 2;
+  if(pixels == 0) pixels++;
+  for(int i = 0; i < pixels; i++){
+    if(i < strip.numPixels()/4){
+      strip.setPixelColor(strip.numPixels()/2 - i,strip.Color(0,100,0));
+      strip.setPixelColor(strip.numPixels()/2 + 1 + i,strip.Color(0,100,0));
+    }
+    else if(i < 7*strip.numPixels()/16){
+      strip.setPixelColor(strip.numPixels()/2 - i,strip.Color(100,20,0));
+      strip.setPixelColor(strip.numPixels()/2 + 1 + i,strip.Color(100,20,0));
+    }
+    else{
+      strip.setPixelColor(strip.numPixels()/2 - i,strip.Color(100,0,0));
+      strip.setPixelColor(strip.numPixels()/2 + 1 + i,strip.Color(100,0,0));
+    }
+  }
+  for(int i = pixels; i < strip.numPixels(); i++){
+      strip.setPixelColor(strip.numPixels()/2 - i,0);
+      strip.setPixelColor(strip.numPixels()/2 + 1 + i, 0);
+  }
+  strip.show();
+ while(!recieved) strip.show(); 
+}
 
 /*
 *Multicolor 
@@ -85,7 +127,7 @@ String returnColor(uint32_t c){
  *   spacers, when true, will put a blank segment of length spacing
  *    between each color
  *   time is the millisecond refresh rate
- * forward is whether the algorithm runs forward orin reverse
+ * forward is whether the algorithm runs forward or in reverse
  */
 
 void multicolor(uint32_t colors[], int sizeOfArray, int spacing, boolean spacers, int time, boolean forward){
@@ -297,10 +339,17 @@ void colorChase(uint32_t c, uint8_t wait) {
 
 
 /*
-*ints red, green, blue are 0-127 values for the brightest of each of those colors
- *wait is the refresh rate of the algorithm
- *if forward is true, the lights will run away from the side with wire
- *if false it will run from the other side towards it
+*wave
+*  Parameters:
+*    red/green/blue are the max red/green/blue values (0-127) which will
+*      be on the front end of the wave
+*    wait is the delay time for the function
+*    forward determines the direction of the wave, true being forward
+*      false being backward
+*
+*  Information:
+*    Runs a line of pixels fading from the front to the back of the line,
+*    which cascades from one side to the other
  */
 void wave(int red, int green, int blue, int wait, boolean forward){  
   uint32_t c = strip.Color(0,0,0);
@@ -340,6 +389,16 @@ void wave(int red, int green, int blue, int wait, boolean forward){
   }
 }
 
+/*
+*breathe
+*  Parameters:
+*    red/green/blue are the max values (0-127) of the respective colors in the function
+*    time is the delay 
+*
+*  Information:
+*    Makes the whole strip "breathe" with a uniform color which fades
+*    to fully off then brightens back to the max value
+*/
 void breathe(int red, int green, int blue, int time){
 
   int maxChange = max(max(red,green),blue);
@@ -387,6 +446,15 @@ void breathe(int red, int green, int blue, int time){
   }
 }
 
+/*
+*jumpAround
+*  Parameters:
+*    color is the color
+*    wait is the delay
+*
+*  Information:
+*    This is a dot that randomly goes right or left
+*/
 void jumpAround(uint32_t color, int wait, int iterations){
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, 0);
   int location = strip.numPixels()/2;
@@ -407,6 +475,12 @@ void jumpAround(uint32_t color, int wait, int iterations){
   }
 }
 
+/*
+*randPixelGen
+* Information:
+*  This just chooses a random RGB value for each pixel
+*
+*/
 void randPixelGen(int iterations){
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, 0);
   for(int k = 0; k < iterations; k++){
@@ -420,6 +494,18 @@ void randPixelGen(int iterations){
   }
 }
 
+/*
+*bounce
+*  Parameters:
+*    c is the color
+*    wait is the delay time
+*    boom is whether to use rainbow explosion or not
+*
+*  Information:
+*    Two pixels come towards the center and when they meet in the
+*    middle they either raindbow explode or reverse direction and
+*    move from the inside out
+*/
 void bounce(uint32_t c, int wait, boolean boom){ 
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, 0);
   for (int i = 0; i < strip.numPixels()/2; i++){
@@ -491,7 +577,17 @@ void explode(int wait){
     delay(wait);
   }
 }
-
+/*
+*dualBounce
+*  parameters:
+*    c is the first color
+*    c2 is the second color
+*    wait is the delay time
+*
+*  Information:
+*    Same as bounce, but with a colored backround
+*    no rainbow explosion
+*/
 void dualBounce(uint32_t c, uint32_t c2, int wait){
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, c2);
   for (int i = 0; i < strip.numPixels()/2; i++){

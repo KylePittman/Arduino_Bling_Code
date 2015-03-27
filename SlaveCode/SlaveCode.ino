@@ -164,6 +164,7 @@ String returnColor(uint32_t c){
 }
 
 /*
+* --NOT TESTED--
 *Speedometer
 *  Parameters:
 *    percent percent of max speed
@@ -204,7 +205,7 @@ void speedometer(int percent){
  *   spacers, when true, will put a blank segment of length spacing
  *    between each color
  *   time is the millisecond refresh rate
- * forward is whether the algorithm runs forward orin reverse
+ * forward is whether the algorithm runs forward or in reverse
  */
 
 void multicolor(uint32_t colors[], int sizeOfArray, int spacing, boolean spacers, int time, boolean forward){
@@ -661,7 +662,17 @@ void explode(int wait){
     delay(wait);
   }
 }
-
+/*
+*dualBounce
+*  parameters:
+*    c is the first color
+*    c2 is the second color
+*    wait is the delay time
+*
+*  Information:
+*    Same as bounce, but with a colored backround
+*    no rainbow explosion
+*/
 void dualBounce(uint32_t c, uint32_t c2, int wait){
   for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, c2);
   for (int i = 0; i < strip.numPixels()/2; i++){
